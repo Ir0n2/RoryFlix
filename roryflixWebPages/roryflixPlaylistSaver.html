@@ -1,0 +1,258 @@
+<head>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: white;
+        }
+
+	h1 {
+            color: #E50914;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+        }
+
+        input[type="text"] {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #222;
+            color: white;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #E50914;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #b20710;
+        }
+
+        ul {
+            margin-top: 30px;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            background-color: #222;
+            padding: 10px;
+            border-radius: 5px;
+            list-style: none;
+        }
+
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+            background-color: #141414;
+        }
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e50914;
+            
+        }
+        nav {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #e50914;
+        }
+        #searchBox {
+            padding: 5px 15px;
+            border: none;
+            background-color: #333;
+            color: white;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        #searchBox:focus {
+            outline: none;
+            background-color: #666;
+        }
+
+	
+    #movieDisplayList {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 30px;
+        padding: 0;
+        gap: 20px;
+    }
+
+    .movieCard {
+        background-color: #222;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+        width: 150px;
+        flex-shrink: 0;
+    }
+
+    .movieCard img {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .movieCard a {
+        color: #1db954;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 5px;
+    }
+
+    </style>
+</head>
+
+<header>
+    <div class="logo">RoryFlix</div>
+    <nav>
+        <a href="/">Home</a>
+	    <a href="/Tv">TV Shows & Movies</a>
+            
+            <a href="/Playlist">Playlist</a>
+            <a href="/Videos">Videos</a>
+	    <form method="POST" action="/imdbsearch" target="_blank">
+        <input type="text" id="searchBox" name="show" placeholder="Enter title..." required>
+        <select id="searchBox" name="type">
+            <option value="movie">Movie</option>
+            <option value="series">TV Show</option>
+            <option value="episode">Episode</option>
+        </select>
+        <button id="searchBox" type="submit">Search</button>
+</form>
+</nav>	    
+</header>
+<center>
+<h1>Add Entry Here</h1>
+    <form id="movieForm">
+        <input type="text" id="title" placeholder="Movie/Show Name" required>
+        <input type="text" id="image" placeholder="Image URL" required>
+        <input type="text" id="url" placeholder="Movie/Show Link" required>
+        <input type="text" id="filename" placeholder="Save as (e.g. featured.txt)" required>
+        <button type="submit">Add Entry</button>
+        <button type="button" onclick="downloadList()">Download List</button>
+        <button type="button" onclick="clearList()">Clear Saved List</button>
+
+	<h1>Import save file</h1>
+
+	<input type="file" id="fileInput" style="margin-top: 10px;">
+	<button type="button" onclick="loadList()">Load Playlist</button>
+    </form>
+
+    <h2 style="margin-top: 40px;">Current Movie List:</h2>
+    <ul id="movieDisplayList"></ul>
+
+    <script>
+	    
+	    function loadList() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a file first.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const content = event.target.result.trim();
+        movieList = content.split("\n");
+        localStorage.setItem('movieList', JSON.stringify(movieList));
+        renderMovieList();
+        alert("Playlist loaded successfully!");
+    };
+    reader.readAsText(file);
+}
+
+
+
+	    let movieList = JSON.parse(localStorage.getItem('movieList') || "[]");
+
+	    function renderMovieList() {
+    const listElement = document.getElementById('movieDisplayList');
+    listElement.innerHTML = '';
+    movieList.forEach((entry, index) => {
+        const [title, img, link] = entry.split(',');
+        const card = document.createElement('div');
+        card.className = 'movieCard';
+        card.innerHTML = `
+            <strong>${title}</strong><br>
+            <img src="${img}" alt="${title}">
+            <br>
+            <a href="${link}" target="_blank">Watch</a>
+        `;
+        listElement.appendChild(card);
+    });
+}
+
+        document.getElementById('movieForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value.trim();
+            const image = document.getElementById('image').value.trim();
+            const url = document.getElementById('url').value.trim();
+
+            const newEntry = `${title},${image},${url}`;
+            movieList.push(newEntry);
+            localStorage.setItem('movieList', JSON.stringify(movieList));
+
+            renderMovieList();
+            e.target.reset();
+        });
+
+        function downloadList() {
+            const filename = document.getElementById('filename').value.trim() || "movies.txt";
+            const content = movieList.join("\n") + " ";
+            const blob = new Blob([content], { type: "text/plain" });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+ 	function clearList() {
+            if (confirm("Are you sure you want to clear the saved movie list?")) {
+                movieList = [];
+                localStorage.removeItem('movieList');
+                renderMovieList();
+                alert("Movie list cleared!");
+            }
+        }
+
+        // Render saved list on page load
+        window.addEventListener('DOMContentLoaded', renderMovieList);
+    </script>
+   </center>
+</body>
+</html>
+
+

@@ -1,0 +1,517 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoryFlix</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            margin: 0;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #E50914;
+        }
+
+        header nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        header nav a:hover {
+            color: #E50914;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://as2.ftcdn.net/v2/jpg/00/45/28/87/1000_F_45288765_mBk4OHfYbiEn0gSuDYgtOPT5Ekax73Yj.jpg') no-repeat center center/cover;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .hero .btn {
+            padding: 15px 30px;
+            background-color: #E50914;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .hero .btn:hover {
+            background-color: #b20710;
+        }
+        #searchBox {
+            padding: 5px 15px;
+            border: none;
+            background-color: #333;
+            color: white;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        /* Content Section */
+        .content {
+            padding: 50px;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .content .search {
+            margin-bottom: 20px;
+        }
+
+        .content .search input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #222;
+            color: white;
+        }
+
+        .content .search input::placeholder {
+            color: #777;
+        }
+
+        .content .carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 20px;
+        }
+
+        .content .carousel img {
+            width: 200px;
+            border-radius: 10px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .content .carousel img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: #aaa;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #E50914;
+        }
+
+	.carousel-container {
+      margin: 20px;
+    }
+    .carousel-title {
+      font-size: 22px;
+      margin: 10px 0;
+    }
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding-bottom: 10px;
+    }
+    .carousel-item img {
+      width: 180px;
+      height: 270px;
+      object-fit: cover;
+      border-radius: 6px;
+      transition: transform 0.3s;
+    }
+    .carousel-item img:hover {
+      transform: scale(1.05);
+    }
+    .controls {
+    
+    }
+    .controls input, .controls button {
+      padding: 10px;
+      margin: 5px;
+    }
+    .controls button {
+      background-color: #e50914;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .controls button:hover {
+      background-color: #b20710;
+    }
+
+    #dynamicCarousels button {
+      background-color: #e50914;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 5px;
+      margin: 10px;
+    }
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">RoryFlix</div>
+        <nav>
+            <a href="/">Home</a>
+	    <a href="/Tv">TV Shows & Movies</a>
+
+            <a href="/Playlist">Playlist</a>
+            <a href="/Videos">Videos</a>
+	    <form method="POST" action="/imdbsearch" target="_blank">
+        <input type="text" id="searchBox" name="show" placeholder="Enter title..." required>
+        <select id="searchBox" name="type">
+            <option value="series">TV Show</option>
+            <option value="movie">Movie</option>
+            <option value="episode">Episode</option>
+        </select>
+        <button id="searchBox" type="submit">Search</button>
+</form>
+
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1 style="border-style: solid; border-width: thick; border-color: red; background-color: red;">Unlimited movies, TV shows, and more.</h1>
+        <p style="border-style: solid; border-width: thick; border-color: red; background-color: red;">Buy Once. Watch anywhere.</p>
+        
+    </div>
+
+   
+    
+
+<div class="carousel" id="fileCarousel"></div>
+<h1> </h1>
+<h2 style="padding-left: 5px;">Add a playlist</h2>
+<div class="controls">
+    <input type="text" id="carouselName" placeholder="Playlist name" />
+    <input type="file" id="playlistFile" accept=".txt" />
+    <button onclick="addCarousel()">Add Playlist</button>
+  </div>
+
+  <div id="carousels"></div>
+
+  <script>
+    const carouselContainer = document.getElementById('carousels');
+
+    // Load saved carousels from cookies
+    window.onload = () => {
+      const saved = getCookie('roryflixCarousels');
+      if (saved) {
+        const carousels = JSON.parse(saved);
+        carousels.forEach(c => createCarousel(c.name, c.movies));
+      }
+    };
+
+    function addCarousel() {
+      const nameInput = document.getElementById('carouselName');
+      const fileInput = document.getElementById('playlistFile');
+      const name = nameInput.value.trim();
+      const file = fileInput.files[0];
+
+      if (!name || !file) {
+        alert('Please provide a name and select a .txt file.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const lines = reader.result.split('\n').filter(Boolean);
+        const movies = lines.map(line => {
+        const [title, ...rest] = line.split(',');
+        const videoUrl = rest.pop();
+        const imgUrl = rest.join(',');
+        return { title, imgUrl, videoUrl };
+        });
+
+        createCarousel(name, movies);
+        saveCarouselsToCookie();
+        nameInput.value = '';
+        fileInput.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function createCarousel(name, movies) {
+      const container = document.createElement('div');
+      container.className = 'carousel-container';
+
+      const header = document.createElement('h2');
+      header.textContent = name;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = () => {
+        container.remove();
+        saveCarouselsToCookie();
+      };
+
+      const headerWrapper = document.createElement('div');
+      headerWrapper.appendChild(header);
+      headerWrapper.appendChild(deleteBtn);
+
+      const carousel = document.createElement('div');
+      carousel.className = 'carousel';
+
+      movies.forEach(movie => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.innerHTML = `
+          <a href="${movie.videoUrl}" target="_blank" title="${movie.title}">
+            <img src="${movie.imgUrl}" alt="${movie.title}" />
+          </a>
+        `;
+        carousel.appendChild(item);
+      });
+
+      container.appendChild(headerWrapper);
+      container.appendChild(carousel);
+      carouselContainer.appendChild(container);
+    }
+
+    function saveCarouselsToCookie() {
+      const data = [];
+      const containers = carouselContainer.querySelectorAll('.carousel-container');
+      containers.forEach(c => {
+        const name = c.querySelector('h2').textContent;
+        const items = Array.from(c.querySelectorAll('.carousel-item a')).map(a => {
+          const img = a.querySelector('img');
+          return {
+            title: img.alt,
+            imgUrl: img.src,
+            videoUrl: a.href
+          };
+        });
+        data.push({ name, movies: items });
+      });
+      document.cookie = "roryflixCarousels=" + JSON.stringify(data) + "; path=/; max-age=31536000";
+    }
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+  </script>
+
+</div>
+<script>
+// Helper cookie functions
+function setCookie(name, value, days = 7) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+}
+
+// Render carousel from file content
+function renderFileCarousel(content) {
+    const lines = content.split('\n').filter(Boolean);
+    const container = document.getElementById('fileCarousel');
+    container.innerHTML = '';
+
+    lines.forEach(line => {
+        const [title, imgUrl, movieUrl] = line.split(',');
+        if (title && imgUrl && movieUrl) {
+            const a = document.createElement('a');
+            a.href = movieUrl.trim();
+            a.target = '_blank';
+
+            const img = document.createElement('img');
+            img.src = imgUrl.trim();
+            img.alt = title.trim();
+            img.style.width = '200px';
+            img.style.borderRadius = '10px';
+            img.style.transition = 'transform 0.3s';
+            img.style.cursor = 'pointer';
+
+            img.addEventListener('mouseover', () => img.style.transform = 'scale(1.1)');
+            img.addEventListener('mouseout', () => img.style.transform = 'scale(1)');
+
+            a.appendChild(img);
+            container.appendChild(a);
+        }
+    });
+}
+//cookies for featured file shit here!
+// File upload and save to cookie
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        setCookie('featuredTvShows', content, 30);
+        renderFileCarousel(content);
+    };
+    reader.readAsText(file);
+});
+
+// Auto-load saved carousel if cookie exists
+window.addEventListener('DOMContentLoaded', () => {
+    const savedContent = getCookie('featuredTvShows');
+    if (savedContent) {
+        renderFileCarousel(savedContent);
+    }
+});
+</script>
+
+<footer>
+        <p>
+        
+            <a href="#">FAQ</a> | 
+            <a href="#">Help Center</a> | 
+            <a href="#">Terms of Use</a> | 
+            <a href="#">Privacy</a>
+        </p>
+    </footer>
+
+    <script>
+        const searchBar = document.getElementById('searchBar');
+        const movieCarousel = document.getElementById('movieCarousel');
+        const movies = movieCarousel.getElementsByTagName('a');
+
+        searchBar.addEventListener('input', function() {
+            const filter = searchBar.value.toLowerCase();
+            Array.from(movies).forEach(function(movie) {
+                const altText = movie.querySelector('img').alt;
+                if (altText.toLowerCase().includes(filter)) {
+                    movie.style.display = 'block';
+                } else {
+                    movie.style.display = 'none';
+                }
+            });
+        });
+        
+    </script>
+    <script>
+  const recentlyViewedKey = 'recentlyViewedTv';
+  const maxItems = 20;
+
+  // Function to get cookie value by name
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+  }
+
+  // Function to set cookie
+  function setCookie(name, value, days = 7) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+  }
+
+  // Load and render Recently Viewed movies
+  function loadRecentlyViewed() {
+    const container = document.getElementById('recentlyViewedCarousel');
+    const raw = getCookie(recentlyViewedKey);
+    if (!raw) return;
+
+    const data = JSON.parse(raw);
+    data.forEach(({ href, src, alt }) => {
+      const a = document.createElement('a');
+      a.href = href;
+      a.target = '_blank';
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+
+      a.appendChild(img);
+      container.appendChild(a);
+    });
+  }
+
+  // Attach click listeners to movie links
+  const movieLinks = document.querySelectorAll('#movieCarousel a');
+  movieLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const img = link.querySelector('img');
+      const viewed = { href: link.href, src: img.src, alt: img.alt };
+
+      let viewedList = JSON.parse(getCookie(recentlyViewedKey) || '[]');
+      viewedList = viewedList.filter(v => v.href !== viewed.href); // Remove duplicates
+      viewedList.unshift(viewed); // Add to beginning
+      if (viewedList.length > maxItems) viewedList.pop(); // Keep only latest 20
+
+      setCookie(recentlyViewedKey, JSON.stringify(viewedList));
+    });
+  });
+
+  // On page load
+  loadRecentlyViewed();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,819 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoryFlix</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            margin: 0;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        header .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #E50914;
+        }
+	
+	header .word {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+
+        header nav {
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        header nav a:hover {
+            color: #E50914;
+        }
+    
+        #searchBox {
+            padding: 5px 15px;
+            border: none;
+            background-color: #333;
+            color: white;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('https://as2.ftcdn.net/v2/jpg/00/45/28/87/1000_F_45288765_mBk4OHfYbiEn0gSuDYgtOPT5Ekax73Yj.jpg') no-repeat center center/cover;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+
+        .hero .btn {
+            padding: 15px 30px;
+            background-color: #E50914;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .hero .btn:hover {
+            background-color: #b20710;
+        }
+
+        /* Content Section */
+        .content {
+            padding: 50px;
+        }
+
+        .content h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .content .search {
+            margin-bottom: 20px;
+        }
+
+        .content .search input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #222;
+            color: white;
+        }
+
+        .content .search input::placeholder {
+            color: #777;
+        }
+
+        .content .carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding-bottom: 20px;
+        }
+
+        .content .carousel img {
+            width: 200px;
+            border-radius: 10px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .content .carousel img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: #aaa;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #E50914;
+        }
+	.carousel-container {
+      margin: 20px;
+    }
+    .carousel-title {
+      font-size: 22px;
+      margin: 10px 0;
+    }
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding-bottom: 10px;
+    }
+    .carousel-item img {
+      width: 180px;
+      height: 270px;
+      object-fit: cover;
+      border-radius: 6px;
+      transition: transform 0.3s;
+    }
+    .carousel-item img:hover {
+      transform: scale(1.05);
+    }
+    .controls {
+
+    }
+    .controls input, .controls button {
+      padding: 10px;
+      margin: 5px;
+    }
+    .controls button {
+      background-color: #e50914;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .controls button:hover {
+      background-color: #b20710;
+    }
+
+    #dynamicCarousels button {
+      background-color: #e50914;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      padding: 5px;
+      margin: 10px;
+    }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">RoryFlix</div>
+        <nav>
+            <a href="/">Home</a>
+	    <a href="/Tv">TV Shows</a>
+            <a href="/Movies">Movies</a>
+            <a href="/Playlist">Playlist</a>
+            <a href="/Videos">Videos</a>
+	    <form method="POST" action="/imdbsearch" target="_blank"">
+        <input type="text" id="searchBox" name="show" placeholder="Enter title..." required>
+        <select id="searchBox" name="type">
+            <option value="movie">Movie</option>
+            <option value="series">TV Show</option>
+            <option value="episode">Episode</option>
+        </select>
+        <button id="searchBox" type="submit">Search</button>
+</form>
+
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1 style="border-style: solid; border-width: thick; border-color: red; background-color: red;">Unlimited movies, TV shows, and more.</h1>
+        <p style="border-style: solid; border-width: thick; border-color: red; background-color: red;">Buy Once. Watch anywhere.</p>
+        
+    </div>
+
+    <div class="content">
+        <h2>Search for a Film</h2>
+        <div class="search">
+            <input type="text" id="searchBar" placeholder="Search for movies or shows...">
+        </div>
+        <div class="carousel" id="movieCarousel">
+            <a href="https://vidsrc.net/embed/tt0112462" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNDdjYmFiYWEtYzBhZS00YTZkLWFlODgtY2I5MDE0NzZmMDljXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-batman-forever-full-movie" alt="Batman forever">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0195714" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZTI0NGM2OGYtNzVmMi00NGQ2LTk2MDAtN2RmYjIzMGRkZGYxXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-final-destination-full-movie" alt="Final Destination">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0162222" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BN2Y5ZTU4YjctMDRmMC00MTg4LWE1M2MtMjk4MzVmOTE4YjkzXkEyXkFqcGdeQXVyNTc1NTQxODI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-cast-away-full-movie" alt="Castaway">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0120655" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYzAyOWUyZjQtNDBiMy00ZDExLTgwNmMtZDdmY2ViNzkyN2Y0XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-dogma-full-movie" alt="Dogma">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0118842" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZDM3MTg2MGUtZDM0MC00NzMwLWE5NjItOWFjNjA2M2I4YzgxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-chasing-amy-full-movie" alt="chasing amy">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0113749" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYzAwNmMyNTEtZWI2MC00OTYzLWFlYzYtMmQ0MTdhYTYwNjNhXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="MallRats">
+            </a>
+            <a href="https://vidsrc.net/embed/tt6521876" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMDBiN2Y1NTMtYzc1ZS00ODlhLWI3NGYtY2M5ODA1ZmY4ZTdjXkEyXkFqcGdeQXVyMzQwMTY2Nzk@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Jay And Silent Bob Reboot">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0261392" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BY2EyYWEwZmQtZWU0Yy00M2Y3LThiZTktOTQxZDUxY2ZjOTYwXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Jay And Silent Bob">
+            </a>
+            <a href="https://mcloud.vvid30c.site/watch/?v41#NUV3dm1BUVFPb1B1dEI4WWNvY21RTFNFN25FbWZzTkVGbVlpN0plbmkwUDRoc00zaklGUy9ReFNjR0VETnZxemxGYmlldDZRSzBVPQ" target="_blank">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC4ZnLJ-oyPQ26BOmbP6tvuPwVImKneLKwWA&s" alt="Clerks 3">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0424345" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BODg1MzY2NDY0OF5BMl5BanBnXkFtZTcwNDgyMzQzMQ@@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Clerks 2">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0109445" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzE1Njk0NmItNDhlMC00ZmFlLWI4ZTUtYTY4ZjgzNjkyMTU1XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Clerks">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0093777" target="_blank">
+                <img src="https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p10402_p_v8_aa.jpg" alt="Prince of darkness">
+            </a>
+            
+            <a href="https://vidsrc.net/embed/tt0084787" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNGViZWZmM2EtNGYzZi00ZDAyLTk3ODMtNzIyZTBjN2Y1NmM1XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-thing-full-movie" alt="The Thing">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0113409" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYjNkMWVkYTUtYzUwZi00ZWI1LTg3MzktZjVkNDQxZjFhOTY1XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-in-the-mouth-of-madness-full-movie" alt="In the mouth madness">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0100260" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYWI4MTVlM2UtNTEzZC00MjdiLWE4ZjItNTZmM2U2NjUzNzI1XkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-nightbreed-full-movie" alt="Night Breed">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0088763" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-back-to-the-future-full-movie" alt="Back to the future">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0096874" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZTMxMGM5MjItNDJhNy00MWI2LWJlZWMtOWFhMjI5ZTQwMWM3XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-back-to-the-future-part-ii-full-movie" alt="Back to the future 2">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0099088" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYjhlMGYxNmMtOWFmMi00Y2M2LWE5NWYtZTdlMDRlMGEzMDA3XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-back-to-the-future-part-iii-full-movie" alt="Back to the future 3">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0151804/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BOTA5MzQ3MzI1NV5BMl5BanBnXkFtZTgwNTcxNTYxMTE@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-office-space-full-movie" alt="Office Space">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0063350/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMzRmN2E1ZDUtZDc2ZC00ZmI3LTkwOTctNzE2ZDIzMGJiMTYzXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-night-of-the-living-dead-full-movie" alt="Night of the living dead 1960">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0100258/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzYxZTE2ZWYtMGYxNS00OTFlLTkyYmMtYzVkZjI0ZTdmYzdkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-night-of-the-living-dead-full-movie" alt="Night of the living dead 1990">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0077402/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMzc1YTIyNjctYzhlNy00ZmYzLWI2ZWQtMzk4MmQwYzA0NGQ1XkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-dawn-of-the-dead-full-movie" alt="Dawn of the living dead 1978">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0363547" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BN2M2ZmU2OGQtNmU5Yi00MTIyLTgwNWMtYjljMzZlYTdiNjBhXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-dawn-of-the-dead-full-movie" alt="Dawn of the living dead 2004">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0088993/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNWVmMzlhZGYtMWRiOS00MGIwLTk5YTAtZGE4OTcyYjU3YzZmXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-day-of-the-dead-full-movie" alt="Day of the dead 1985">
+            </a>
+            <a href="https://vidsrc.net/embed/tt3053228/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BY2RkODMxZmUtODFkMi00OWIxLTk5YmItZTMyYWQ1NDQyZGViXkEyXkFqcGdeQXVyODA4MDkwODk@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-day-of-the-dead-bloodline-full-movie" alt="Day of the dead 2017">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0418819/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzU1MDI1NDM1NF5BMl5BanBnXkFtZTcwMzU5OTkyMQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-land-of-the-dead-full-movie" alt="Land of the dead 2017">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0848557/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNDg5MjAxMjA2Nl5BMl5BanBnXkFtZTcwMjE1OTc1MQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-diary-of-the-dead-full-movie" alt="Diary of the dead 2005">
+            </a>
+            <a href="https://vidsrc.net/embed/tt1134854/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzE1NDMxMDAzOF5BMl5BanBnXkFtZTcwMjgzNDcyMw@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-survival-of-the-dead-full-movie" alt="Survival of the dead 2009">
+            </a>
+            <a href="https://vidsrc.net/embed/tt3416742/" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/en/7/70/What_We_Do_in_the_Shadows_poster.jpg" alt="What we do in the shadows">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0293429/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BY2ZlNWIxODMtN2YwZi00ZjNmLWIyN2UtZTFkYmZkNDQyNTAyXkEyXkFqcGdeQXVyODkzNTgxMDg@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-mortal-kombat-full-movie" alt="mortal kombat 2021">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0113855/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNjY5NTEzZGItMGY3My00NzE4LThkYTUtYjJkNzk3MDBiMWE3XkEyXkFqcGdeQXVyNzg5MDE1MDk@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-mortal-kombat-full-movie" alt="mortal kombat">
+            </a>
+            <a href="https://vidsrc.net/embed/tt14901058/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMDU0ZDkwMzktZDA0MC00MTc5LWE1MzEtYzg2MTU5ZWE4MTU1XkEyXkFqcGdeQXVyMTY5Nzc4MDY@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-mortal-kombat-legends-battle-of-the-realms-full-movie" alt="mortal kombat legends">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0119707/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYjdmZTU3MWMtZTU4ZC00NjYzLTk1NzAtODc2ZDY0ZWNhYWEzL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-mortal-kombat-annihilation-full-movie" alt="mortal kombat annihilation">
+            </a>
+             <a href="https://vidsrc.net/embed/tt9580138/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzY3YTUwYTQtNjkwNy00OTAyLWE0OWEtYmE3MGIyOWZkODY1XkEyXkFqcGdeQXVyMjkyNzYwMTc@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-mortal-kombat-legends-scorpions-revenge-full-movie" alt="mortal kombat scorpian">
+            </a>
+            <a href="https://api.braflix.win/embed/85" target="_blank">
+                <img src="https://image.tmdb.org/t/p/w500/ceG9VzoRAVGwivFU403Wc3AHRys.jpg" alt="indiana jones 1">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0087469/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYzgzMTIzNzctNmNiZC00ZDYyLWJjNzktMmQ2MDM2ZDkwZGVhXkEyXkFqcGdeQXVyMjM4MzQ4OTQ@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-indiana-jones-and-the-temple-of-doom-full-movie" alt="indiana jones 2">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0097576" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BY2Q0ODg4ZmItNDZiYi00ZWY5LTg2NzctNmYwZjA5OThmNzE1XkEyXkFqcGdeQXVyMjM4MzQ4OTQ@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-indiana-jones-and-the-last-crusade-full-movie" alt="indiana jones 3">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0367882/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZmY5ZTk3ZDMtZjA1MS00NzU4LTk5ZDItYmNhOTkxMGYxMjRlXkEyXkFqcGdeQXVyMjM4MzQ4OTQ@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-indiana-jones-and-the-kingdom-of-the-crystal-skull-full-movie" alt="Indiana jones 4">
+            </a>
+            <a href="https://api.braflix.win/embed/335977" target="_blank">
+                <img src="https://image.tmdb.org/t/p/w500/Af4bXE63pVsb2FtbW8uYIyPBadD.jpg" alt="Indiana Jones 5">
+            </a>
+            
+            <a href="https://vidsrc.net/embed/tt0948470/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjMyOTM4MDMxNV5BMl5BanBnXkFtZTcwNjIyNzExOA@@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Amazing SpiderMan 1">
+            </a>
+            <a href="https://vidsrc.net/embed/tt1872181" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BOTA5NDYxNTg0OV5BMl5BanBnXkFtZTgwODE5NzU1MTE@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Amazing Spiderman 2">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0145487/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZDEyN2NhMjgtMjdhNi00MmNlLWE5YTgtZGE4MzNjMTRlMGEwXkEyXkFqcGdeQXVyNDUyOTg3Njg@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="SpiderMan 1">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0316654/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMzY2ODk4NmUtOTVmNi00ZTdkLTlmOWYtMmE2OWVhNTU2OTVkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Spiderman 2">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0413300" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYTk3MDljOWQtNGI2My00OTEzLTlhYjQtOTQ4ODM2MzUwY2IwXkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Spiderman 3">
+            </a>
+            <a href="https://vidsrc.net/embed/tt2250912/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNTk4ODQ1MzgzNl5BMl5BanBnXkFtZTgwMTMyMzM4MTI@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="SpiderMan 1 homecoming">
+            </a>
+            <a href="https://vidsrc.net/embed/tt6320628/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMGZlNTY1ZWUtYTMzNC00ZjUyLWE0MjQtMTMxN2E3ODYxMWVmXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Spiderman 2 far from home">
+            </a>
+            <a href="https://vidsrc.net/embed/tt10872600" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_QL50_UY380_CR0,0,240,380_AL_.jpg" alt="Spiderman 3 no way home">
+            </a>    
+            <a href="https://vidsrc.net/embed/tt1270797/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNTFkZjdjN2QtOGE5MS00ZTgzLTgxZjAtYzkyZWQ5MjEzYmZjXkEyXkFqcGdeQXVyMTM0NTUzNDIy._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-venom-full-movie" alt="Venom 1">
+            </a>
+            <a href="https://vidsrc.net/embed/tt7097896/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYTc3ZTAwYTgtMmM4ZS00MDRiLWI2Y2EtYmRiZmE0YjkzMGY1XkEyXkFqcGdeQXVyMDA4NzMyOA@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-venom-let-there-be-carnage-full-movie" alt="Venom 2">
+            </a>
+            <a href="https://vidsrc.net/embed/tt16366836/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZDMyYWU4NzItZDY0MC00ODE2LTkyYTMtMzNkNDdmYmFhZDg0XkEyXkFqcGc@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-venom-the-last-dance-full-movie" alt="Venom 3">
+            </a>
+             <a href="https://vidsrc.net/embed/tt15398776/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMDBmYTZjNjUtN2M1MS00MTQ2LTk2ODgtNzc2M2QyZGE5NTVjXkEyXkFqcGdeQXVyNzAwMjU2MTY@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-oppenheimer--full-movie" alt="Oppenheimer">
+            </a>
+            <a href="https://vidsrc.net/embed/tt2428170/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTY0NTU2ODM5Ml5BMl5BanBnXkFtZTgwMTAwOTA5NTE@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-creep-full-movie" alt="Creep">
+            </a>
+            <a href="https://vidsrc.net/embed/tt3654796/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjA2MTkxMDYzN15BMl5BanBnXkFtZTgwNTc3Mzc4MzI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-creep-2-full-movie" alt="Creep 2">
+            </a>
+             <a href="https://vidsrc.net/embed/tt0080120/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYTU2MWRiMTMtYzAzZi00NGYzLTlkMDEtNWQ3MzZlNTJlNzZkL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-warriors-full-movie" alt="The warriors">
+            </a>
+             <a href="https://vidsrc.net/embed/tt0384537/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BOWQzNTU3NGUtNDAxMi00ZjFjLTkyYWUtYjgwZDJiMDljZWY4XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-silent-hill-full-movie" alt="silent hill">
+            </a>
+            <a href="https://vidsrc.net/embed/tt0938330/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYjBkMjU0NWEtZjY5MS00YWYwLTljMmYtM2IzYTQ0NGU2YzAzXkEyXkFqcGdeQXVyMzY0MTE3NzU@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-silent-hill-revelation-full-movie" alt="Silent hill 2 (but it's really based of silent hill 3)">
+            </a>
+            
+             <a href="https://vidsrc.net/embed/tt0075314" target="_blank">
+                <img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcRXA0OJHIu5XCaiXSwvSPQDD-FXPS5IxUCmH6l4LH1WK-BxH8I7XJsgxdUERy4bOAakLLWYcw" alt="Taxi Driver">
+            </a>
+            <a href="https://vidsrc.xyz/embed/tt0120611" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BOTk2NDNjZWQtMGY0Mi00YTY2LWE5MzctMGRhZmNlYzljYTg5XkEyXkFqcGdeQXVyMTAyNjg4NjE0._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-blade-full-movie" alt="Blade">
+            </a>
+            <a href="https://vidsrc.xyz/embed/tt0081505/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZWFlYmY2MGEtZjVkYS00YzU4LTg0YjQtYzY1ZGE3NTA5NGQxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-shining-full-movie" alt="The shining">
+            </a>
+        <a href="https://vidsrc.net/embed/tt0144084" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZTM2ZGJmNjQtN2UyOS00NjcxLWFjMDktMDE2NzMyNTZlZTBiXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-american-psycho-full-movie" alt="american psycho">
+            </a>
+        <a href="https://vidsrc.net/embed/tt0099685" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BY2NkZjEzMDgtN2RjYy00YzM1LWI4ZmQtMjIwYjFjNmI3ZGEwXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-goodfellas-full-movie" alt="foodgellas">
+            </a>
+        <a href="https://vidsrc.net/embed/tt0116118" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMDFiMGU1MmQtMTg0Ny00ZmQ4LTkyMWMtYjVlZGRmMWY5ZDliXkEyXkFqcGdeQXVyMTA0MTI2ODE4._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-doctor-who-full-movie" alt="dr who">
+            </a>
+        <a href="https://vidsrc.net/embed/tt1131729" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTMzMjYzMTMyM15BMl5BanBnXkFtZTcwOTk5NDA5Mg@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-boat-that-rocked-full-movie" alt="Pirate radio">
+            </a>
+        <a href="https://vidsrc.net/embed/tt0120737" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-lord-of-the-rings-the-fellowship-of-the-ring-full-movie" alt="Regular Show">
+            </a>
+        <a href="https://vidsrc.net/embed/tt0167261" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BZGMxZTdjZmYtMmE2Ni00ZTdkLWI5NTgtNjlmMjBiNzU2MmI5XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-lord-of-the-rings-the-two-towers-full-movie" alt="Regular Show">
+            </a>
+        <a href="https://vidsrc.net/embed/tt0167260" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzA5ZDNlZWMtM2NhNS00NDJjLTk4NDItYTRmY2EwMWZlMTY3XkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-lord-of-the-rings-the-return-of-the-king-full-movie" alt="Regular Show">
+            </a>
+        <a href="https://vidsrc.net/embed/tt0120915" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYTRhNjcwNWQtMGJmMi00NmQyLWE2YzItODVmMTdjNWI0ZDA2XkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-star-wars-episode-i---the-phantom-menace-full-movie" alt="Regular Show">
+            </a>
+<a href="https://vidsrc.net/embed/tt0121765" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMDAzM2M0Y2UtZjRmZi00MzVlLTg4MjEtOTE3NzU5ZDVlMTU5XkEyXkFqcGdeQXVyNDUyOTg3Njg@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-star-wars-episode-ii---attack-of-the-clones-full-movie" alt="Regular Show">
+            </a>
+<a href="https://vidsrc.net/embed/tt0121766" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNTc4MTc3NTQ5OF5BMl5BanBnXkFtZTcwOTg0NjI4NA@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-star-wars-episode-iii---revenge-of-the-sith-full-movie" alt="Regular Show">
+            </a>
+            <a href="https://vidsrcme.vidsrc.icu/embed/movie?tmdb=330459&autoplay=1" target="_blank">
+                <img src="https://www.originalfilmart.co.uk/cdn/shop/products/rogue_one_2016_intl_original_film_art_1600x.jpg?v=1569448809" alt="Regular Show">
+            </a>
+
+<a href="https://vidsrc.net/embed/tt0076759" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzg4MjQxNTQtZmI5My00YjMwLWJlMjUtMmJlY2U2ZWFlNzY1XkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-star-wars-full-movie" alt="Star wars a new hope">
+            </a>
+<a href="https://vidsrc.net/embed/tt0193524" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNmNiNmFlOTEtZmUwNi00M2M2LWI2OTctOTQ1ZjFmNmRlOWVlXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="star wars holiday special">
+            </a>
+<a href="https://vidsrcme.vidsrc.icu/embed/movie?tmdb=1891&autoplay=1" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTkxNGFlNDktZmJkNC00MDdhLTg0MTEtZjZiYWI3MGE5NWIwXkEyXkFqcGc@._V1_.jpg" alt="Empire strikes back">
+            </a>
+<a href="https://vidsrc.xyz/embed/tt0086190" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNWEwOTI0MmUtMGNmNy00ODViLTlkZDQtZTg1YmQ3MDgyNTUzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg" alt="Return of the jedi">
+            </a>
+<a href="https://vidsrc.xyz/embed/tt0088247" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYTViNzMxZjEtZGEwNy00MDNiLWIzNGQtZDY2MjQ1OWViZjFmXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-terminator-full-movie" alt="terminator">
+            </a>
+<a href="https://vidsrc.xyz/embed/tt0103064" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMGU2NzRmZjUtOGUxYS00ZjdjLWEwZWItY2NlM2JhNjkxNTFmXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-terminator-2-judgment-day-full-movie" alt="terminator">
+            </a>
+<a href="https://vidsrc.xyz/embed/tt0181852" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTk5NzM1ODgyN15BMl5BanBnXkFtZTcwMzA5MjAzMw@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-terminator-3-rise-of-the-machines-full-movie" alt="terminator">
+            </a>
+<a href="https://vidsrc.xyz/embed/tt0438488" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BODBlOTJhZjItMGRmYS00YzM1LWFmZTktOTJmNDMyZTBjMjBkXkEyXkFqcGdeQXVyMjMwNDgzNjc@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-terminator-salvation-full-movie" alt="terminator">
+            </a>
+<a href="https://vidsrc.xyz/embed/tt1340138" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjM1NTc0NzE4OF5BMl5BanBnXkFtZTgwNDkyNjQ1NTE@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-terminator-genisys-full-movie" alt="terminstorw">
+            </a>
+            <a href="https://vidsrc.xyz/embed/tt6450804" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BNzhlYjE5MjMtZDJmYy00MGZmLTgwN2MtZGM0NTk2ZTczNmU5XkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-terminator-dark-fate-full-movie" alt="terminator">
+            </a>
+
+            <a href="https://vidsrc.xyz/embed/tt0158811/" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/en/9/9d/Muppets_from_space.jpg" alt="muppet in space">
+            </a>
+
+            <a href="https://vidsrc.xyz/embed/tt1204342" target="_blank">
+                <img src="https://lumiere-a.akamaihd.net/v1/images/p_themuppets2011_19640_e55261df.jpeg" alt="muppet">
+            </a>
+
+            <a href="https://vidsrc.xyz/embed/tt2281587" target="_blank">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRL9DD8KLN9G2UWUA9HTyvOnHUK6XlGuz_v4shU80kyBA&s" alt="muppet">
+            </a>
+
+            <a href="https://vidsrc.xyz/embed/tt0091042" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMDA0NjZhZWUtNmI2NC00MmFjLTgwZDYtYzVjZmNhMDVmOTBkXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-ferris-buellers-day-off-full-movie" alt="ferris beuler">
+            </a>
+
+            <a href="https://vidsrc.xyz/embed/tt0059026" target="_blank">
+                <img src="https://www.subplotstudio.com/resources/images/productions/4548/12314/art.sample.437.jpg" alt="Charlie Brown" title="Hi Maggie <3">
+            </a>
+
+     <a href="https://vidsrc.xyz/embed/tt0113243/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BOGZkZTc2ZjItNzIzMS00ODRlLTliNjgtZjRmNzM2NjkzZTU1XkEyXkFqcGc@._V1_.jpg" alt="hackers">
+            </a>
+<a href="https://vidsrc.xyz/embed/tt2184339/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMTQzNTcwODEyM15BMl5BanBnXkFtZTcwMjM1MDI0OQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-purge-full-movie" alt="the purge">
+            </a>
+           
+                       <a href="https://vidsrc.xyz/embed/tt2975578" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjE2ODMxMTk1Nl5BMl5BanBnXkFtZTgwMDEzNjEzMTE@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-purge-anarchy-full-movie" alt="the purge 2">
+            </a>
+             <a href="https://vidsrc.xyz/embed/tt4094724/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMjI3MDI0MTA1N15BMl5BanBnXkFtZTgwOTk4NjU5ODE@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-purge-election-year-full-movie" alt="the purge 3">
+            </a>
+                         <a href="https://vidsrc.xyz/embed/tt6133466/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BYmVjMWJhMTYtMzUxMC00ODdhLTk3YzMtZDFhNGUyOGFhYTY0XkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-first-purge-full-movie" alt="the first purge">
+            </a>             <a href="https://vidsrc.xyz/embed/tt10327252/" target="_blank">
+                <img src="https://m.media-amazon.com/images/M/MV5BMGE5NjJjNGMtZDkwMy00MGFlLWFkYTktYWFkNTY1NjcwOTY2XkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_QL60_UY380_CR0,0,240,380_AL_.jpg#watch-the-forever-purge-full-movie" alt="the forever purge">
+            </a>
+            </a>
+        </div>
+    
+<h2 style="padding-left: 5px;">Recently Viewed</h2>
+<div class="carousel" id="recentlyViewedCarousel"></div>
+    
+<h2 style="padding-left: 5px;">Featured from File</h2>
+<input type="file" id="fileInput" accept=".txt" style="margin: 20px 50px; background: #222; color: white; border: 1px solid #333; padding: 10px; border-radius: 5px;">
+<div class="carousel" id="fileCarousel"></div>
+
+<h2 style="padding-left: 5px;">Featured from playlist</h2>
+
+
+<div class="controls">
+    <input type="text" id="carouselName" placeholder="Carousel name" />
+    <input type="file" id="playlistFile" accept=".txt" />
+    <button onclick="addCarousel()">Add Carousel</button>
+  </div>
+
+  <div id="carousels"></div>
+
+  <script>
+    const carouselContainer = document.getElementById('carousels');
+
+    // Load saved carousels from cookies
+    window.onload = () => {
+      const saved = getCookie('roryflixMovieCarousels');
+      if (saved) {
+        const carousels = JSON.parse(saved);
+        carousels.forEach(c => createCarousel(c.name, c.movies));
+      }
+    };
+
+    function addCarousel() {
+      const nameInput = document.getElementById('carouselName');
+      const fileInput = document.getElementById('playlistFile');
+      const name = nameInput.value.trim();
+      const file = fileInput.files[0];
+
+      if (!name || !file) {
+        alert('Please provide a name and select a .txt file.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const lines = reader.result.split('\n').filter(Boolean);
+        const movies = lines.map(line => {
+        const [title, ...rest] = line.split(',');
+        const videoUrl = rest.pop();
+        const imgUrl = rest.join(',');
+        return { title, imgUrl, videoUrl };
+        });
+        createCarousel(name, movies);
+        saveCarouselsToCookie();
+        nameInput.value = '';
+        fileInput.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    function createCarousel(name, movies) {
+      const container = document.createElement('div');
+      container.className = 'carousel-container';
+
+      const header = document.createElement('h2');
+      header.textContent = name;
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.onclick = () => {
+        container.remove();
+        saveCarouselsToCookie();
+      };
+
+      const headerWrapper = document.createElement('div');
+      headerWrapper.appendChild(header);
+      headerWrapper.appendChild(deleteBtn);
+
+      const carousel = document.createElement('div');
+      carousel.className = 'carousel';
+
+      movies.forEach(movie => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item';
+        item.innerHTML = `
+          <a href="${movie.videoUrl}" target="_blank" title="${movie.title}">
+            <img src="${movie.imgUrl}" alt="${movie.title}" />
+          </a>
+        `;
+        carousel.appendChild(item);
+      });
+
+      container.appendChild(headerWrapper);
+      container.appendChild(carousel);
+      carouselContainer.appendChild(container);
+    }
+
+    function saveCarouselsToCookie() {
+      const data = [];
+      const containers = carouselContainer.querySelectorAll('.carousel-container');
+      containers.forEach(c => {
+        const name = c.querySelector('h2').textContent;
+        const items = Array.from(c.querySelectorAll('.carousel-item a')).map(a => {
+          const img = a.querySelector('img');
+          return {
+            title: img.alt,
+            imgUrl: img.src,
+            videoUrl: a.href
+          };
+        });
+        data.push({ name, movies: items });
+      });
+      document.cookie = "roryflixMovieCarousels=" + JSON.stringify(data) + "; path=/; max-age=31536000";
+    }
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+  </script>
+
+    </div>
+<script>
+// Helper cookie functions
+function setCookie(name, value, days = 7) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+}
+
+// Render carousel from file content
+function renderFileCarousel(content) {
+    const lines = content.split('\n').filter(Boolean);
+    const container = document.getElementById('fileCarousel');
+    container.innerHTML = '';
+
+    lines.forEach(line => {
+        const [title, imgUrl, movieUrl] = line.split(',');
+        if (title && imgUrl && movieUrl) {
+            const a = document.createElement('a');
+            a.href = movieUrl.trim();
+            a.target = '_blank';
+
+            const img = document.createElement('img');
+            img.src = imgUrl.trim();
+            img.alt = title.trim();
+            img.style.width = '200px';
+            img.style.borderRadius = '10px';
+            img.style.transition = 'transform 0.3s';
+            img.style.cursor = 'pointer';
+
+            img.addEventListener('mouseover', () => img.style.transform = 'scale(1.1)');
+            img.addEventListener('mouseout', () => img.style.transform = 'scale(1)');
+
+            a.appendChild(img);
+            container.appendChild(a);
+        }
+    });
+}
+//cookies for featured file shit here!
+// File upload and save to cookie
+document.getElementById('fileInput').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        setCookie('featuredMovies', content, 30);
+        renderFileCarousel(content);
+    };
+    reader.readAsText(file);
+});
+
+// Auto-load saved carousel if cookie exists
+window.addEventListener('DOMContentLoaded', () => {
+    const savedContent = getCookie('featuredMovies');
+    if (savedContent) {
+        renderFileCarousel(savedContent);
+    }
+});
+</script>
+
+<footer>
+        <p>
+        
+            <a href="#">FAQ</a> | 
+            <a href="#">Help Center</a> | 
+            <a href="#">Terms of Use</a> | 
+            <a href="#">Privacy</a>
+        </p>
+    </footer>
+
+    <script>
+        const searchBar = document.getElementById('searchBar');
+        const movieCarousel = document.getElementById('movieCarousel');
+        const movies = movieCarousel.getElementsByTagName('a');
+
+        searchBar.addEventListener('input', function() {
+            const filter = searchBar.value.toLowerCase();
+            Array.from(movies).forEach(function(movie) {
+                const altText = movie.querySelector('img').alt;
+                if (altText.toLowerCase().includes(filter)) {
+                    movie.style.display = 'block';
+                } else {
+                    movie.style.display = 'none';
+                }
+            });
+        });
+        
+    </script>
+    <script>
+  const recentlyViewedKey = 'recentlyViewed';
+  const maxItems = 20;
+
+  // Function to get cookie value by name
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+  }
+
+  // Function to set cookie
+  function setCookie(name, value, days = 7) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+  }
+
+  // Load and render Recently Viewed movies
+  function loadRecentlyViewed() {
+    const container = document.getElementById('recentlyViewedCarousel');
+    const raw = getCookie(recentlyViewedKey);
+    if (!raw) return;
+
+    const data = JSON.parse(raw);
+    data.forEach(({ href, src, alt }) => {
+      const a = document.createElement('a');
+      a.href = href;
+      a.target = '_blank';
+
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = alt;
+
+      a.appendChild(img);
+      container.appendChild(a);
+    });
+  }
+
+  // Attach click listeners to movie links
+  const movieLinks = document.querySelectorAll('#movieCarousel a');
+  movieLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const img = link.querySelector('img');
+      const viewed = { href: link.href, src: img.src, alt: img.alt };
+
+      let viewedList = JSON.parse(getCookie(recentlyViewedKey) || '[]');
+      viewedList = viewedList.filter(v => v.href !== viewed.href); // Remove duplicates
+      viewedList.unshift(viewed); // Add to beginning
+      if (viewedList.length > maxItems) viewedList.pop(); // Keep only latest 20
+
+      setCookie(recentlyViewedKey, JSON.stringify(viewedList));
+    });
+  });
+
+  // On page load
+  loadRecentlyViewed();
+</script>
+
+</body>
+</html>

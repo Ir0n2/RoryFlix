@@ -1,0 +1,531 @@
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMDb Remote</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem auto;
+      max-width: 480px;
+      padding: 0 1rem;
+    }
+    h2, h3 { text-align: center; }
+
+    label { display: block; margin-top: 1rem; }
+    input, select, button {
+      width: 100%; padding: 0.5rem; font-size: 1rem;
+    }
+    #episodeFields { display: none; }
+
+    .carousel-wrapper { margin-top: 2rem; }
+    .carousel {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 0.5rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 0.5rem;
+    }
+    .card {
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.5rem;
+      scroll-snap-align: start;
+      cursor: pointer;
+      background: #fafafa;
+    }
+    .card h4 { margin: 0 0 0.25rem 0; font-size: 1rem; }
+    .card span { font-size: 0.85rem; color: #555; display: block; }
+    
+    .btn-group {
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .btn-group button {
+      all: unset;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .delete-btn {
+      background: #f44336;
+      color: white;
+    }
+
+    .fav-btn {
+      background: #ddd;
+      color: #999;
+    }
+
+    .fav-btn.faved {
+      background: #fffacd;
+      color: gold;
+    }
+
+    /* === Dark Mode === */
+body {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+h2, h3 {
+  color: #ffffff;
+}
+
+label {
+  color: #cccccc;
+}
+
+input, select, button {
+  background: #1e1e1e;
+  color: #e0e0e0;
+  border: 1px solid #333;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2a2a2a;
+}
+
+/* Cards */
+.card {
+  background: #1a1a1a;
+  border: 1px solid #333;
+}
+
+.card h4 {
+  color: #ffffff;
+}
+
+.card span {
+  color: #aaaaaa;
+}
+
+/* Buttons on cards */
+.delete-btn {
+  background: #c62828;
+}
+
+.fav-btn {
+  background: #333;
+  color: #aaa;
+}
+
+.fav-btn.faved {
+  background: #3a3a1a;
+  color: gold;
+}
+
+/* Carousel scrollbar (optional, subtle) */
+.carousel::-webkit-scrollbar {
+  height: 6px;
+}
+
+.carousel::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+/* === 3x3 GRID REMOTE === */
+.remote-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 320px;
+  margin: 2rem auto;
+}
+
+/* Make everything square */
+.remote-grid button,
+.remote-grid div {
+  aspect-ratio: 1 / 1;
+}
+
+/* Button styling */
+.remote-grid button {
+  border-radius: 16px;
+  border: none;
+  background: #1e1e1e;
+  color: white;
+  font-size: 1.4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.15s ease;
+}
+
+/* Hover + press */
+.remote-grid button:hover {
+  background: #2a2a2a;
+}
+
+.remote-grid button:active {
+  transform: scale(0.95);
+  background: #333;
+}
+
+/* Power button special */
+#openViewer {
+  background: #b71c1c;
+}
+
+/* Center button emphasis */
+#pauseBtn {
+  background: #2e7d32;
+  font-size: 1.6rem;
+}
+
+  </style>
+</head>
+<body>
+  <h2>RoryFlix Remote</h2>
+
+<!--<div class="remote-grid">
+    <button id="openViewer">Open Viewer</button>
+</div> -->
+
+  <form id="searchForm">
+
+     <label for="serverType">Server Type</label>
+    <select id="serverType" name="serverType" required>
+      <option value="vidsrc">VidSrc</option>
+      <option value="movieApi">Movies API</option>
+    </select>
+
+    <label for="mediaType">Media Type</label>
+    <select id="mediaType" name="mediaType" required>
+      <option value="movie">Movie</option>
+      <option value="series">Series</option>
+    </select>
+
+    <label for="title">Title</label>
+    <input type="text" name="title" id="title" required />
+
+    <div id="episodeFields">
+      <label for="season">Season</label>
+      <input type="number" name="season" id="season" min="1" />
+      <label for="episode">Episode</label>
+      <input type="number" name="episode" id="episode" min="1" />
+    </div>
+     
+    <label for="searchBox">Search by IMDb/LugaTV ID</label>
+    <input type="text" id="searchBox" placeholder="Search..." title="Paste the movie ID in the search box. You can find it in the movie's URL on IMDb or LugaTV. It looks like this: tt4589218"/>
+    <script>
+  const searchBox = document.getElementById('searchBox');
+  const seasonInput = document.getElementById('season');
+  const episodeInput = document.getElementById('episode');
+
+  searchBox.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const rawId = searchBox.value.trim();
+      if (!rawId.startsWith("tt")) {
+        alert("Please enter a valid IMDb ID (e.g., tt1234567)");
+        return;
+      }
+
+      const fullUrl = `https://vidsrc.xyz/embed/${encodeURIComponent(rawId)}`;
+      const season = seasonInput?.value?.trim() || '';
+      const episode = episodeInput?.value?.trim() || '';
+
+      const formData = new FormData();
+      formData.append("imdbIdSearch", fullUrl);
+      formData.append("season", season);
+      formData.append("episode", episode);
+
+      fetch("/remote?action=imdbIdSearch", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Request failed");
+        return res.text();
+      })
+      .then(text => {
+        console.log("✅ IMDb ID sent with season/episode:", fullUrl, season, episode);
+      })
+      .catch(err => {
+        console.error("⚠️ IMDb ID Search Failed:", err);
+      });
+    }
+  });
+</script>
+
+    <button type="submit" style="margin-top: 1rem;">🔍 Search</button>
+  </form>
+<div class="remote-grid">
+  
+<button id="openViewer">Open Viewer</button>
+<button id="refreshBtn">Refresh</button>
+<button id="hideMouse">Hide Mouse</button>
+
+<button id="raiseVolume">volume up</button>  
+<button id="pauseBtn">Pause</button>
+<button id="lowerVolume">volume down</button>
+  
+  <button id="fullScreen">Full Screen</button>
+  
+  
+  <button id="resetMovie">Replay</button>
+  
+  
+</div>
+
+  <div class="carousel-wrapper">
+    <h3>📜 Previously Watched</h3>
+    <div id="carousel" class="carousel"></div>
+    
+    <h3>⭐ Favorites</h3>
+    <div id="favCarousel" class="carousel"></div>
+  </div>
+    
+
+<div class="remote-grid">
+
+        <button type="button" id="upleft"">↖</button>
+        <button type="button" id="up">↑</button>
+        <button type="button" id="upright">↗</button>
+
+        <button type="button" id="left">←</button>
+        <button type="button" id="adamsandlerclick"class="center">●</button>
+        <button type="button" id="right">→</button>
+
+        <button type="button" id="downleft">↙</button>
+        <button type="button" id="down">↓</button>
+        <button type="button" id="downright">↘</button>
+</div>
+
+<form>
+        <label for="speed">Cursor step size:</label>
+        <input
+        type="number"
+        id="speed"
+        name="speed"
+        value="10"
+        min="1"
+        max="100">
+    
+    </form>
+
+  <script>
+    const serverTypeSelect = document.getElementById("serverType");
+    const mediaTypeSelect = document.getElementById("mediaType");
+    const episodeFields = document.getElementById("episodeFields");
+    const form = document.getElementById("searchForm");
+
+    function toggleEpisodeFields() {
+      episodeFields.style.display = mediaTypeSelect.value === "series" ? "block" : "none";
+    }
+    mediaTypeSelect.addEventListener("change", toggleEpisodeFields);
+    toggleEpisodeFields();
+
+    function getCookie(name) {
+      const raw = decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;\\s*)" + name + "\\s*=\\s*([^;]*).*$)|^.*$"), "$1"));
+      return raw ? JSON.parse(raw) : [];
+    }
+    function setCookie(name, data) {
+      const expires = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString();
+      document.cookie = `${name}=${encodeURIComponent(JSON.stringify(data))}; expires=${expires}; path=/`;
+    }
+
+    function getHistory() { return getCookie("watchHistory"); }
+    function saveHistory(list) { setCookie("watchHistory", list); }
+    function getFavorites() { return getCookie("favorites"); }
+    function saveFavorites(list) { setCookie("favorites", list); }
+
+    function renderCarousel() {
+      const history = getHistory();
+      const favs = getFavorites();
+      const carousel = document.getElementById("carousel");
+      const favCarousel = document.getElementById("favCarousel");
+
+      carousel.innerHTML = "";
+      favCarousel.innerHTML = "";
+
+      function renderCard(item, idx, isFromFavorites = false) {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const title = item.title;
+        const key = `${item.mediaType}:${item.title}`;
+        const isFav = favs.includes(key);
+        const subtitle = item.mediaType === 'series' ? `S${item.season} · E${item.episode}` : 'Movie';
+
+        card.innerHTML = `
+          <div class="btn-group">
+            <button class="fav-btn ${isFav ? "faved" : ""}" title="Favorite">★</button>
+            <button class="delete-btn" title="Remove">×</button>
+          </div>
+          <h4>${title}</h4>
+          <span>${subtitle}</span>
+        `;
+
+        card.querySelector(".delete-btn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (isFromFavorites) {
+            let newFavs = favs.filter(f => f !== key);
+            saveFavorites(newFavs);
+          } else {
+            let newHistory = [...history];
+            newHistory.splice(idx, 1);
+            saveHistory(newHistory);
+          }
+          renderCarousel();
+        });
+
+        card.querySelector(".fav-btn").addEventListener("click", (e) => {
+          e.stopPropagation();
+          let newFavs = [...favs];
+          if (isFav) {
+            newFavs = newFavs.filter(f => f !== key);
+          } else {
+            newFavs.unshift(key);
+          }
+          saveFavorites(newFavs);
+          renderCarousel();
+        });
+
+        card.onclick = () => {
+          mediaTypeSelect.value = item.mediaType;
+          toggleEpisodeFields();
+          document.getElementById("title").value = item.title;
+          if (item.mediaType === 'series') {
+            document.getElementById("season").value = item.season;
+            document.getElementById("episode").value = item.episode;
+          }
+          submitForm();
+        };
+
+        return card;
+      }
+
+      history.forEach((item, idx) => {
+        const el = renderCard(item, idx, false);
+        carousel.appendChild(el);
+      });
+
+      favs.forEach((key) => {
+        const [mediaType, title] = key.split(":");
+        const match = history.find(h => h.title === title && h.mediaType === mediaType);
+        if (match) {
+          const el = renderCard(match, -1, true);
+          favCarousel.appendChild(el);
+        }
+      });
+    }
+
+    function submitForm() {
+      const formData = new FormData(form);
+      const entry = {
+        serverType: formData.get("serverType"),
+        mediaType: formData.get("mediaType"),
+        title: formData.get("title").trim(),
+        season: formData.get("season") || null,
+        episode: formData.get("episode") || null,
+      };
+      if (!entry.title) return;
+      let history = getHistory();
+      history = history.filter(h => !(h.title === entry.title && h.mediaType === entry.mediaType));
+      history.unshift(entry);
+      history = history.slice(0, 15);
+      saveHistory(history);
+      renderCarousel();
+
+      fetch("/remote", {
+        method: "POST",
+        body: formData
+      }).then(res => {
+        if (!res.ok) throw new Error("Request failed");
+        return res.text();
+      }).then(text => {
+        console.log("✅ Search submitted:", text);
+      }).catch(err => {
+        console.error("⚠️ Error submitting form:", err);
+      });
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      submitForm();
+    });
+
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      fetch('/remote?action=pause', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('hideMouse').addEventListener('click', () => {
+      fetch('/remote?action=hideMouse', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('fullScreen').addEventListener('click', () => {
+      fetch('/remote?action=fullScreen', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('resetMovie').addEventListener('click', () => {
+      fetch('/remote?action=resetMovie', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      fetch('/remote?action=refresh', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('openViewer').addEventListener('click', () => {
+      fetch('/remote?action=openViewer', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('lowerVolume').addEventListener('click', () => {
+      fetch('/remote?action=lowerVolume', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('raiseVolume').addEventListener('click', () => {
+      fetch('/remote?action=raiseVolume', { method: 'POST' }).catch(console.error);
+    });
+
+    document.getElementById('upleft').addEventListener('click', () => {
+      fetch('/remote?action=upleft', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('upright').addEventListener('click', () => {
+      fetch('/remote?action=upright', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('downleft').addEventListener('click', () => {
+      fetch('/remote?action=downleft', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('downright').addEventListener('click', () => {
+      fetch('/remote?action=downright', { method: 'POST' }).catch(console.error);
+    });
+
+    document.getElementById('up').addEventListener('click', () => {
+      fetch('/remote?action=up', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('down').addEventListener('click', () => {
+      fetch('/remote?action=down', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('left').addEventListener('click', () => {
+      fetch('/remote?action=left', { method: 'POST' }).catch(console.error);
+    });
+    document.getElementById('right').addEventListener('click', () => {
+      fetch('/remote?action=right', { method: 'POST' }).catch(console.error);
+    });
+document.getElementById('adamsandlerclick').addEventListener('click', () => {
+      fetch('/remote?action=click', { method: 'POST' }).catch(console.error);
+    });
+   
+    renderCarousel();
+  </script>
+</body>
