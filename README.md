@@ -10,7 +10,7 @@ Whether you're repurposing an old Linux Mint laptop connected to your TV or simp
 
 # Features
 
-## 📂 Local Media Library
+## Local Media Library
 
 * Stream your own video collection over your local network
 * Automatically serves video files placed in the `videos/` folder
@@ -18,7 +18,7 @@ Whether you're repurposing an old Linux Mint laptop connected to your TV or simp
 
 ---
 
-## 🎬 Streaming Frontend
+## Streaming Frontend
 
 RoryFlix includes a Netflix-style frontend that can search for movies and television shows using the OMDb API.
 
@@ -37,7 +37,7 @@ The frontend supports:
 
 ---
 
-## 📺 Remote Control
+## Remote Control
 
 One of RoryFlix's biggest features is its built-in remote.
 
@@ -60,7 +60,7 @@ This allows an old laptop connected to your television to behave similarly to a 
 
 ---
 
-## 🖥 Viewer
+## Viewer
 
 The Viewer is a fullscreen Firefox window running on the server itself.
 
