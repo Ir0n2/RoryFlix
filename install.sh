@@ -13,6 +13,8 @@ if ! command -v apt >/dev/null 2>&1; then
     exit 1
 fi
 
+mkdir videos
+
 echo "Updating package lists..."
 sudo apt update
 
