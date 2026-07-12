@@ -80,7 +80,7 @@ RoryFlix was built on **Linux Mint** and is primarily intended to run there.
 It should also work on:
 
 * Ubuntu
-* Most Debian-based Linux distributions
+* Most Debian-based, x11, Linux distributions.
 
 Windows and macOS are not officially supported at this time because the remote currently depends on `xdotool` for mouse and keyboard control.
 
@@ -350,7 +350,7 @@ RoryFlix was created with a few simple goals:
 | Windows    | ⚠ Untested        |
 | macOS      | ⚠ Untested        |
 
-The Remote currently depends on **xdotool**, which is the main reason Linux is recommended. There is a windows version of xdotool. Intheory everything could work in windows. I often wondered if xdotool/Roryflix would work in WSL (windows subsystem for linux) feel free to port it over yourself and make a windows fork.
+The Remote currently depends on **xdotool**, which is the main reason Linux is recommended. There is a windows version of xdotool. Intheory everything could work in windows. I often wondered if xdotool/Roryflix would work in WSL (windows subsystem for linux) feel free to port it over yourself and make a windows fork. Same goes for xdotool. xdotool uses x11 stuff. You'd need to use ydotool for it to work on wayland, I do believe.
 
 ---
 
