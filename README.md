@@ -128,7 +128,7 @@ The installer will install:
 * Go
 * Firefox
 * xdotool
-* Git (if needed)
+* Create videos folder
 
 and create an empty
 
@@ -212,7 +212,13 @@ http://192.168.1.25:8080
 
 # Firewall
 
-If other devices cannot access RoryFlix, your firewall may be blocking connections.
+It is recommended you use the default gui firewall tool that comes with linux mint.
+Press windows or super key and Search "firewall"
+In the linux mint firewall tool set incoming to allow.
+
+If other devices still cannot access RoryFlix, your firewall may still be blocking connections.
+
+If so try this:
 
 On Linux systems using UFW:
 
@@ -344,7 +350,7 @@ RoryFlix was created with a few simple goals:
 | Windows    | ⚠ Untested        |
 | macOS      | ⚠ Untested        |
 
-The Remote currently depends on **xdotool**, which is the main reason Linux is recommended.
+The Remote currently depends on **xdotool**, which is the main reason Linux is recommended. There is a windows version of xdotool. Intheory everything could work in windows. I often wondered if xdotool/Roryflix would work in WSL (windows subsystem for linux) feel free to port it over yourself and make a windows fork.
 
 ---
 
@@ -360,8 +366,8 @@ Streaming functionality simply opens content from external providers selected by
 
 # License
 
-See the LICENSE file included with this repository.
+Software licensing is not punk rock!
 
 ---
 
-Enjoy giving your old laptop a second life. 🍿
+Enjoy giving your old laptop a second life fighting the system.
