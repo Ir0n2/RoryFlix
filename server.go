@@ -588,7 +588,8 @@ func Figlet(text string, font string) (string) {
 func main() {
 
 	http.HandleFunc("/imdbsearch", handleIMDbSearch)
-	http.Handle("/videos/", http.StripPrefix("/videos/", http.FileServer(http.Dir("./videos"))))
+	
+	http.Handle("/videos/", http.StripPrefix("/videos/", http.FileServer(http.Dir(videosFolder))))
 	http.HandleFunc("/", serveIndex)
 	http.HandleFunc("/Tv", serveTv)
 	//http.HandleFunc("/Movies", serveMovies)
