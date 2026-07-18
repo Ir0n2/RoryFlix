@@ -720,6 +720,23 @@ a.video-link {
 a.video-link:hover {
   text-decoration: underline;
 }
+
+#search {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 6px;
+  background: #222;
+  color: white;
+  font-size: 16px;
+}
+
+#search:focus {
+  outline: 2px solid #E50914;
+}
+
 </style>
 </head>
 <body>
@@ -738,12 +755,38 @@ a.video-link:hover {
 
 <div class="container">
   <h1>Available Videos</h1>
-  <ul>
+  <input
+    type="text"
+    id="search"
+    placeholder="Search videos..."
+    onkeyup="filterVideos()"
+  >
+
+  <ul id="videoList">
     {{range .Videos}}
     <li><a class="video-link" href="/videos/{{.}}" target="_blank">{{.}}</a></li>
     {{end}}
   </ul>
 </div>
+
+<script>
+function filterVideos() {
+    const filter = document.getElementById("search").value.toLowerCase();
+    const list = document.getElementById("videoList");
+    const items = list.getElementsByTagName("li");
+
+    for (let i = 0; i < items.length; i++) {
+        const text = items[i].textContent.toLowerCase();
+
+        if (text.includes(filter)) {
+            items[i].style.display = "";
+        } else {
+            items[i].style.display = "none";
+        }
+    }
+}
+</script>
+
 
 </body>
 </html>`
