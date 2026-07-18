@@ -17,7 +17,7 @@ import (
 )
 
 var OMDBAPIKEY = LoadAPIKey("apikey.txt")
-
+var videosFolder = LoadAPIKey("path.txt")
 var vidsrcUrl  = "https://vsembed.ru/embed/"
 
 type PageData struct {
@@ -639,7 +639,7 @@ func servePlaylist(w http.ResponseWriter, r *http.Request) {
 //this is the page for serving downloaded content
 
 func serveVideos(w http.ResponseWriter, r *http.Request) {
-	files, err := os.ReadDir("./videos")
+	files, err := os.ReadDir(videosFolder)
 	if err != nil {
 		http.Error(w, "Unable to read videos directory", 500)
 		return
