@@ -609,7 +609,11 @@ func handleIMDbSearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, vidsrcUrl+imdbID, http.StatusSeeOther)
+	if showType == "series" {
+            showType = "tv"
+    }
+	
+	http.Redirect(w, r, vidsrcUrl+showType+"/"+imdbID, http.StatusSeeOther)
 }
 
 func fetchImdbID(showName string, showType string, apiKey string) (string, error) {
